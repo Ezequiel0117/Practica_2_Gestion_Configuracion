@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mini Task Manager: organiza tus tareas de forma simple y clara.">
+  <title>Mini Task Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <a class="brand" href="index.html" aria-label="Mini Task Manager, inicio">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span>Mini Task Manager</span>
+      </a>
+      <p class="date-label" id="current-date"></p>
+    </header>
+
+    <main class="app-main">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Tu espacio de enfoque</p>
+          <h1 id="page-title">Haz que hoy cuente.</h1>
+          <p class="intro-copy">Una lista clara para avanzar en lo importante, sin ruido.</p>
+        </div>
+        <div class="progress-summary" aria-label="Progreso de tareas">
+          <strong id="progress-value">0%</strong>
+          <span>completado</span>
+        </div>
+      </section>
+
+      <section class="task-composer" aria-labelledby="composer-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Nueva tarea</p>
+            <h2 id="composer-title">¿Qué necesitas hacer?</h2>
+          </div>
+          <span class="task-count" id="task-count">0 tareas</span>
+        </div>
+        <form class="task-form" id="task-form">
+          <div class="input-group">
+            <label for="task-title">Tarea</label>
+            <input id="task-title" name="title" type="text" maxlength="100" placeholder="Ej. Preparar presentación" autocomplete="off" required>
+          </div>
+          <div class="input-group priority-group">
+            <label for="task-priority">Prioridad</label>
+            <select id="task-priority" name="priority">
+              <option value="low">Baja</option>
+              <option value="medium" selected>Media</option>
+              <option value="high">Alta</option>
+            </select>
+          </div>
+          <button class="primary-button" type="submit">
+            <span aria-hidden="true">+</span>
+            Agregar tarea
+          </button>
+        </form>
+        <p class="form-message" id="form-message" role="alert" aria-live="polite"></p>
+      </section>
+
+      <section class="task-list-section" aria-labelledby="list-title">
+        <div class="list-toolbar">
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Tu lista</p>
+            <h2 id="list-title">Tareas</h2>
+          </div>
+          <div class="filters" role="group" aria-label="Filtrar tareas">
+            <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">Todas</button>
+            <button class="filter-button" type="button" data-filter="active" aria-pressed="false">Pendientes</button>
+            <button class="filter-button" type="button" data-filter="completed" aria-pressed="false">Completadas</button>
+          </div>
+        </div>
+
+        <ul class="task-list" id="task-list" aria-live="polite"></ul>
+        <div class="empty-state" id="empty-state" hidden>
+          <span class="empty-icon" aria-hidden="true">-</span>
+          <h3 id="empty-title">No hay tareas todavía</h3>
+          <p id="empty-copy">Agrega tu primera tarea y empieza a avanzar.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span>Enfócate en lo siguiente.</span>
+      <button class="clear-button" id="clear-completed" type="button">Limpiar completadas</button>
+    </footer>
+  </div>
+</body>
+</html>
