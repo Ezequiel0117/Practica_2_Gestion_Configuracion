@@ -69,6 +69,16 @@ function handleCreateTask(event) {
     return;
   }
 
+  const taskAlreadyExists = state.tasks.some(
+    (task) => normalizeTitle(task.title) === normalizeTitle(title),
+  );
+
+  if (taskAlreadyExists) {
+    showFormMessage("Ya existe una tarea con ese nombre.");
+    elements.titleInput.focus();
+    return;
+  }
+
   state.tasks.unshift({
     id: crypto.randomUUID(),
     title,
@@ -82,6 +92,10 @@ function handleCreateTask(event) {
   elements.titleInput.focus();
   showFormMessage("");
   render();
+}
+
+function normalizeTitle(title) {
+  return title.trim().toLocaleLowerCase();
 }
 
 function handleTaskAction(event) {
