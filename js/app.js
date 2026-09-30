@@ -3,12 +3,15 @@ const STORAGE_KEY = "mini-task-manager.tasks";
 const state = {
   tasks: loadTasks(),
   filter: "all",
+  editingTaskId: null,
 };
 
 const elements = {
   form: document.querySelector("#task-form"),
   titleInput: document.querySelector("#task-title"),
   priorityInput: document.querySelector("#task-priority"),
+  submitButton: document.querySelector("#form-submit"),
+  cancelEdit: document.querySelector("#cancel-edit"),
   taskList: document.querySelector("#task-list"),
   emptyState: document.querySelector("#empty-state"),
   emptyTitle: document.querySelector("#empty-title"),
@@ -37,6 +40,7 @@ function initialize() {
   }).format(new Date());
 
   elements.form.addEventListener("submit", handleCreateTask);
+  elements.cancelEdit.addEventListener("click", cancelEditing);
   elements.taskList.addEventListener("click", handleTaskAction);
   elements.clearCompleted.addEventListener("click", clearCompletedTasks);
   elements.filterButtons.forEach((button) => {
@@ -70,7 +74,9 @@ function handleCreateTask(event) {
   }
 
   const taskAlreadyExists = state.tasks.some(
-    (task) => normalizeTitle(task.title) === normalizeTitle(title),
+    (task) =>
+      task.id !== state.editingTaskId &&
+      normalizeTitle(task.title) === normalizeTitle(title),
   );
 
   if (taskAlreadyExists) {
@@ -79,16 +85,25 @@ function handleCreateTask(event) {
     return;
   }
 
-  state.tasks.unshift({
-    id: crypto.randomUUID(),
-    title,
-    priority: elements.priorityInput.value,
-    completed: false,
-    createdAt: new Date().toISOString(),
-  });
+  if (state.editingTaskId) {
+    const task = state.tasks.find((item) => item.id === state.editingTaskId);
+
+    if (task) {
+      task.title = title;
+      task.priority = elements.priorityInput.value;
+    }
+  } else {
+    state.tasks.unshift({
+      id: crypto.randomUUID(),
+      title,
+      priority: elements.priorityInput.value,
+      completed: false,
+      createdAt: new Date().toISOString(),
+    });
+  }
 
   saveTasks();
-  elements.form.reset();
+  resetForm();
   elements.titleInput.focus();
   showFormMessage("");
   render();
@@ -108,6 +123,11 @@ function handleTaskAction(event) {
   const { action, id } = actionButton.dataset;
   const task = state.tasks.find((item) => item.id === id);
 
+  if (action === "edit" && task) {
+    startEditing(task);
+    return;
+  }
+
   if (action === "toggle" && task) {
     task.completed = !task.completed;
   }
@@ -118,6 +138,31 @@ function handleTaskAction(event) {
 
   saveTasks();
   render();
+}
+
+function startEditing(task) {
+  state.editingTaskId = task.id;
+  elements.titleInput.value = task.title;
+  elements.priorityInput.value = task.priority;
+  elements.submitButton.innerHTML =
+    '<span aria-hidden="true">+</span> Guardar cambios';
+  elements.cancelEdit.hidden = false;
+  showFormMessage("Editando tarea.");
+  elements.titleInput.focus();
+}
+
+function cancelEditing() {
+  resetForm();
+  showFormMessage("");
+  elements.titleInput.focus();
+}
+
+function resetForm() {
+  state.editingTaskId = null;
+  elements.form.reset();
+  elements.submitButton.innerHTML =
+    '<span aria-hidden="true">+</span> Agregar tarea';
+  elements.cancelEdit.hidden = true;
 }
 
 function clearCompletedTasks() {
@@ -177,6 +222,7 @@ function createTaskMarkup(task) {
           <span>Prioridad ${priorityLabels[task.priority]}</span>
         </div>
       </div>
+      <button class="edit-button" type="button" data-action="edit" data-id="${task.id}" aria-label="Editar tarea" title="Editar tarea">Editar</button>
       <button class="delete-button" type="button" data-action="delete" data-id="${task.id}" aria-label="Eliminar tarea" title="Eliminar tarea">&times;</button>
     </li>
   `;

@@ -180,7 +180,7 @@ h3 {
 
 .task-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 160px auto;
+  grid-template-columns: minmax(0, 1fr) 160px auto auto;
   align-items: end;
   gap: 12px;
 }
@@ -241,6 +241,21 @@ h3 {
 .primary-button:hover {
   background: var(--accent-dark);
   transform: translateY(-1px);
+}
+
+.cancel-button {
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  padding: 0 16px;
+  font-weight: 600;
+}
+
+.cancel-button:hover {
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .primary-button span {
@@ -308,7 +323,7 @@ h3 {
 
 .task-item {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 14px;
   min-height: 70px;
@@ -412,6 +427,26 @@ h3 {
     background 160ms ease,
     color 160ms ease,
     opacity 160ms ease;
+}
+
+.edit-button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: color 160ms ease, opacity 160ms ease;
+}
+
+.task-item:hover .edit-button,
+.edit-button:focus-visible {
+  opacity: 1;
+}
+
+.edit-button:hover {
+  color: var(--accent-dark);
 }
 
 .task-item:hover .delete-button,
@@ -523,7 +558,8 @@ h3 {
   }
 
   .task-form .input-group:first-child,
-  .primary-button {
+  .primary-button,
+  .cancel-button {
     grid-column: 1 / -1;
   }
 
@@ -541,6 +577,10 @@ h3 {
   }
 
   .delete-button {
+    opacity: 1;
+  }
+
+  .edit-button {
     opacity: 1;
   }
 }
