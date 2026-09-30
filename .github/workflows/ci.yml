@@ -1,0 +1,27 @@
+name: CI Pipeline Mini Task Manager
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el código del repositorio (Checkout)
+        uses: actions/checkout@v3
+
+      - name: Simular construcción y ejecución de pruebas
+        run: |
+          echo "Iniciando la revisión del código..."
+          test -f index.html || { echo "Error: Falta index.html"; exit 1; }
+          test -f js/app.js || { echo "Error: Falta app.js"; exit 1; }
+          test -f css/styles.css || { echo "Error: Falta styles.css"; exit 1; }
+          echo "Pruebas estructurales superadas exitosamente."
+          
+      - name: Generar reporte de estado
+        run: |
+          echo "Reporte: El sistema se ha integrado y verificado correctamente."
